@@ -1,42 +1,84 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@font-face{
+  font-family: "Garet";
+  src:local("Garet-Book"),
+  url('../../reactjs-portfolio/src/assets/fonts/Garet-Book.ttf')
+}
+@font-face{
+  font-family: "GaretHeavy";
+  src:local("Garet-Heavy"),
+  url('../../reactjs-portfolio/src/assets/fonts/Garet-Heavy.ttf')
+}
+@font-face{
+  font-family: "SourceSansPro";
+  src:local("SourceSansPro-Regular"),
+  url('../../reactjs-portfolio/src/assets/fonts/SourceSansPro-Regular.otf')
+}
+@font-face{
+  font-family: "SourceSansProLight";
+  src:local("SourceSansPro-Light"),
+  url('../../reactjs-portfolio/src/assets/fonts/SourceSansPro-Light.otf')
+}
+@font-face{
+  font-family: "SourceSansProSemibold";
+  src:local("SourceSansPro-Semibold"),
+  url('../../reactjs-portfolio/src/assets/fonts/SourceSansPro-Semibold.otf')
+}
+@font-face{
+  font-family: "SourceSansProBold";
+  src:local("SourceSansPro-Bold"),
+  url('../../reactjs-portfolio/src/assets/fonts/SourceSansPro-Bold.otf')
+}
+@font-face{
+  font-family: "Montserrat";
+  src:local("Montserrat-Regular"),
+  url('../../reactjs-portfolio/src/assets/fonts/Montserrat-Regular.otf')
+}
+@font-face{
+  font-family: "MontserratLight";
+  src:local("Montserrat-Light"),
+  url('../../reactjs-portfolio/src/assets/fonts/Montserrat-Light.otf')
+}
+@font-face{
+  font-family: "MontserratSemiBold";
+  src:local("Montserrat-SemiBold"),
+  url('../../reactjs-portfolio/src/assets/fonts/Montserrat-SemiBold.otf')
+}
+@font-face{
+  font-family: "MontserratBold";
+  src:local("Montserrat-Bold"),
+  url('../../reactjs-portfolio/src/assets/fonts/Montserrat-Bold.otf')
+}
+@font-face{
+  font-family: "MontserratExtraBold";
+  src:local("Montserrat-ExtraBold"),
+  url('../../reactjs-portfolio/src/assets/fonts/Montserrat-ExtraBold.otf')
+}
+:root {
+  flex-grow: 1;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.gradient-tracking-base {
+  position: relative;
+  background: #002129;
+  overflow: hidden;
+  z-index: 950;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.gradient-tracking-base::before {
+  --size: 1000px;
+  content: '';
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle closest-side, rgba(0, 143, 179, 0.15), rgba(0, 143, 179, 0.03) 50%, transparent 80%);
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.gradient-tracking-base:hover::before {
+  --size: 1000px;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+/*radial-gradient(600px at 1110px 935px, rgba(29, 78, 216, 0.15), transparent 80%)*/
