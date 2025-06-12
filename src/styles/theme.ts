@@ -45,6 +45,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           zIndex: 10,
+          backdropFilter: "blur(7px)",
           transition: "0.3s",
           "&:hover": {
             backgroundColor: "rgba(0, 39, 51,0.8)",

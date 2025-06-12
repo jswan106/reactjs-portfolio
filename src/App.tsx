@@ -7,7 +7,6 @@ import {
   Grid2,
   Paper,
   ThemeProvider,
-  Typography,
 } from "@mui/material";
 import { theme } from "./styles/theme.ts";
 import { NavItemList } from "./components/NavItemList.tsx";
@@ -16,7 +15,7 @@ import { BioSummary } from "./components/BioSummary.tsx";
 import { SkillsContainer } from "./components/SkillsContainer.tsx";
 import { AchievementsContainer } from "./components/AchievementsContainer.tsx";
 import { JobHistoryContainer } from "./components/JobHistoryContainer.tsx";
-import _ from "lodash-es";
+import bgImgUrl from "./assets/background-img.png";
 
 function App() {
   const gradientTrackingBase = useRef<any>();
@@ -188,6 +187,19 @@ function App() {
         style={{ width: "100%" }}
       >
         <CssBaseline />
+        <Box
+          sx={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `url(${bgImgUrl})`,
+            opacity: 0.04,
+            // zIndex: 1,
+            pointerEvents: "none",
+          }}
+        />
         <Box
           id="scroll-box"
           ref={scrollBoxRef}
