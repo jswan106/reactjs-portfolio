@@ -38,7 +38,7 @@ function App() {
       ];
       const viewportHeight =
         scrollBoxRef.current?.clientHeight || window.innerHeight;
-      const threshold = viewportHeight * 0.35; // 35% of the scrollable area
+      const threshold = viewportHeight * 0.35;
       const bottomOffset = 35;
 
       for (const { id } of sections) {
@@ -65,7 +65,7 @@ function App() {
     const box = scrollBoxRef.current;
     if (box) {
       box.addEventListener("scroll", handleScroll, { passive: true });
-      handleScroll(); // Set initial
+      handleScroll();
     }
     return () => {
       if (box) box.removeEventListener("scroll", handleScroll);
@@ -91,10 +91,7 @@ function App() {
       }
     };
 
-    // Scroll on mount if hash exists
     scrollToHash();
-
-    // Listen for hash changes
     window.addEventListener("hashchange", scrollToHash);
 
     return () => {
@@ -128,12 +125,20 @@ function App() {
               sx={{ pt: 10 }}
               alignItems="flex-start"
             >
-              <Grid2 container size={{ xs: 12, lg: 4.5 }}>
+              <Grid2
+                container
+                size={{ xs: 12, lg: 3 }}
+                sx={{ position: "absolute", top: 70 }}
+              >
                 <TitleContainer />
                 <NavItemList activeSection={activeSection} />
-                {/*Maybe a cool enhancement might be to update skills to */}
-                {/*have the layout as if it were a skill tree from a video*/}
-                {/*game? Might be kind of cool?*/}
+              </Grid2>
+              <Grid2
+                container
+                size={{ xs: 12, lg: 4.5 }}
+                sx={{ visibility: "hidden" }}
+              >
+                <TitleContainer />
               </Grid2>
               <Grid2 size={{ xs: 12, lg: 6.5 }}>
                 <BioSummary />

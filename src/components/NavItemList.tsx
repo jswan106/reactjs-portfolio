@@ -7,7 +7,7 @@ interface NavItemListProps {
 
 export function NavItemList({ activeSection }: NavItemListProps) {
   return (
-    <Grid2 sx={{ position: "absolute", top: "35%" }}>
+    <Grid2>
       <nav>
         <Grid2 container direction="column">
           <NavItem

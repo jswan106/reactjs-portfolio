@@ -50,13 +50,22 @@ export const theme = createTheme({
             backgroundColor: "rgba(0, 39, 51,0.8)",
           },
         },
-        // rgba(24, 33, 47, 0.5)
       },
     },
     MuiTypography: {
       styleOverrides: {
         root: {
           zIndex: 20,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          "&:focus, &:focus-visible": {
+            outline: "none",
+            boxShadow: "none",
+          },
         },
       },
     },

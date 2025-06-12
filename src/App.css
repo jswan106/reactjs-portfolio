@@ -61,26 +61,26 @@
   position: relative;
   background: #002129;
   overflow: hidden;
-  z-index: 0; /* Lower than content, higher than background */
+  z-index: 0;
 }
 
 .gradient-tracking-base::before {
-  --size: 600px;
+  --size: 1200px;
   content: '';
   position: absolute;
   left: var(--x, 50%);
   top: var(--y, 50%);
   width: var(--size);
   height: var(--size);
-  background: radial-gradient(circle closest-side, rgba(0, 143, 179, 0.15), rgba(0, 143, 179, 0.03) 50%, transparent 80%);
+  background: radial-gradient(
+    circle closest-side,
+    rgba(0, 143, 179, 0.22) 0%,
+    rgba(0, 143, 179, 0.10) 40%,
+    rgba(0, 143, 179, 0.04) 70%,
+    transparent 100%
+  );
   transform: translate(-50%, -50%);
-  pointer-events: none; /* This is key! */
-  z-index: 1; /* Above background, below content */
+  pointer-events: none;
+  z-index: 1;
   transition: width 0.2s ease, height 0.2s ease;
 }
-
-/*.gradient-tracking-base:hover::before {*/
-/*  --size: 1000px;*/
-/*}*/
-
-/*radial-gradient(600px at 1110px 935px, rgba(29, 78, 216, 0.15), transparent 80%)*/
