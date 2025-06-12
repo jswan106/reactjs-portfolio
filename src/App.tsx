@@ -14,11 +14,15 @@ import { NavItemList } from "./components/NavItemList.tsx";
 import { TitleContainer } from "./components/TitleContainer.tsx";
 import { BioSummary } from "./components/BioSummary.tsx";
 import { SkillsContainer } from "./components/SkillsContainer.tsx";
+import { AchievementsContainer } from "./components/AchievementsContainer.tsx";
+import { JobHistoryContainer } from "./components/JobHistoryContainer.tsx";
+import _ from "lodash-es";
 
 function App() {
   const gradientTrackingBase = useRef<any>();
   const scrollBoxRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState("about");
+  const [navScrollInProgress, setNavScrollInProgress] = useState(false);
 
   useEffect(() => {
     gradientTrackingBase.current.addEventListener("mousemove", (e: any) => {
@@ -34,6 +38,7 @@ function App() {
       const sections = [
         { id: "about" },
         { id: "skills" },
+        { id: "history" },
         { id: "achievements" },
       ];
       const viewportHeight =
@@ -73,31 +78,107 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const scrollToHash = () => {
-      if (window.location.hash) {
-        const id = window.location.hash.replace("#", "");
-        const el = document.getElementById(id);
-        if (el && scrollBoxRef.current) {
-          const boxRect = scrollBoxRef.current.getBoundingClientRect();
-          const elRect = el.getBoundingClientRect();
-          // Calculate scroll position so the element aligns with the top of the scroll area
-          const scrollTop =
-            scrollBoxRef.current.scrollTop + (elRect.top - boxRect.top);
-          scrollBoxRef.current.scrollTo({
-            top: scrollTop,
-            behavior: "smooth",
-          });
+    const handleScroll = () => {
+      const sections = [
+        { id: "about" },
+        { id: "skills" },
+        { id: "history" },
+        { id: "achievements" },
+      ];
+      const box = scrollBoxRef.current;
+      if (!box) return;
+      const hashId = window.location.hash?.replace("#", "") ?? undefined;
+
+      let found = false;
+      for (const { id } of sections) {
+        found = isAtTopOfScreen(id);
+        if (found) break;
+      }
+
+      // If not found and scrolled to bottom, set last section as active
+      if (isScrolledToBottom(box)) {
+        let newActiveSection = sections[sections.length - 1].id;
+
+        if (window.location.hash && found == true) {
+          newActiveSection = hashId;
         }
+
+        if (found && navScrollInProgress) {
+          setNavScrollInProgress(false);
+        }
+
+        setActiveSection(newActiveSection);
       }
     };
 
-    scrollToHash();
-    window.addEventListener("hashchange", scrollToHash);
-
+    const box = scrollBoxRef.current;
+    if (box) {
+      box.addEventListener("scroll", handleScroll, { passive: true });
+      handleScroll();
+    }
     return () => {
-      window.removeEventListener("hashchange", scrollToHash);
+      if (box) box.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (navScrollInProgress === true) {
+      setTimeout(() => setNavScrollInProgress(false), 750);
+    }
+
+    return () => {};
+  }, [navScrollInProgress]);
+
+  useEffect(() => {
+    const hashId = window.location.hash?.replace("#", "") ?? undefined;
+    const present = isAtTopOfScreen(hashId);
+    if (hashId && !present && navScrollInProgress === false) {
+      removeHash();
+    }
+  }, [activeSection, navScrollInProgress]);
+
+  const handleNavItemSelect = (id: string) => {
+    setActiveSection(id);
+    setNavScrollInProgress(true);
+  };
+
+  function isScrolledToBottom(box: HTMLElement) {
+    // Allow a small threshold for floating point errors
+    return box.scrollHeight - box.scrollTop - box.clientHeight - 15 < 2;
+  }
+
+  function removeHash() {
+    history.pushState(
+      "",
+      document.title,
+      window.location.pathname + window.location.search
+    );
+  }
+
+  function isAtTopOfScreen(id: string) {
+    const box = scrollBoxRef.current;
+    if (!box) return false;
+    const el = document.getElementById(id);
+    if (!el) return false;
+
+    const viewportHeight = box.clientHeight || window.innerHeight;
+    const threshold = viewportHeight * 0.35;
+    const bottomOffset = 35;
+
+    const rect = el.getBoundingClientRect();
+    const boxRect = box.getBoundingClientRect();
+    if (!boxRect) return false;
+    const top = rect.top - boxRect.top;
+    const bottom = rect.bottom - boxRect.top - bottomOffset;
+    if (
+      (top >= 0 && top <= threshold) ||
+      (bottom >= 0 && bottom <= threshold) ||
+      (top < 0 && bottom > threshold)
+    ) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -131,7 +212,11 @@ function App() {
                 sx={{ position: "absolute", top: 70 }}
               >
                 <TitleContainer />
-                <NavItemList activeSection={activeSection} />
+                <NavItemList
+                  activeSection={activeSection}
+                  markScrolling={setNavScrollInProgress}
+                  onNavItemSelect={handleNavItemSelect}
+                />
               </Grid2>
               <Grid2
                 container
@@ -140,124 +225,16 @@ function App() {
               >
                 <TitleContainer />
               </Grid2>
-              <Grid2 size={{ xs: 12, lg: 6.5 }}>
+              <Grid2
+                container
+                spacing={5}
+                size={{ xs: 12, lg: 6.5 }}
+                sx={{ pb: 6 }}
+              >
                 <BioSummary />
                 <SkillsContainer />
-                <Grid2 size={12} sx={{ pt: 5 }} id="achievements">
-                  <Grid2 size={12}>
-                    <Typography
-                      variant="h6"
-                      color="secondary"
-                      sx={{
-                        pb: 0.5,
-                        fontFamily: "Montserrat",
-                        fontSize: "1.4rem",
-                      }}
-                    >
-                      Achievements
-                    </Typography>
-                  </Grid2>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                  <Paper sx={{ p: 4 }}>
-                    <Grid2 size={12}>
-                      <Typography>Vice President of Engineering</Typography>
-                    </Grid2>
-                  </Paper>
-                </Grid2>
+                <JobHistoryContainer />
+                <AchievementsContainer />
               </Grid2>
             </Grid2>
           </Container>

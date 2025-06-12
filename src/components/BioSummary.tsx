@@ -32,7 +32,7 @@ export function BioSummary() {
         puzzle, and I enjoy seeing all of the pieces come together. I'm
         constantly in the pursuit of knowledge and growth.
       </Typography>
-      <Typography color="text.secondary" sx={sx}>
+      <Typography color="text.secondary" sx={{ ...sx, pb: undefined }}>
         In my free time, I'm usually hanging out with my wife, enhancing my{" "}
         <em>Stardew Valley farm</em>, savoring the pain from my most recent{" "}
         <em>Dota 2</em> match, or trying (and failing) to win a game of{" "}

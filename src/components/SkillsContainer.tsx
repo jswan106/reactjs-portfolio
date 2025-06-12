@@ -3,7 +3,7 @@ import { SkillsCategory } from "./SkillsCategory.tsx";
 
 export function SkillsContainer() {
   return (
-    <Grid2 container sx={{ pt: 2 }} id="skills">
+    <Grid2 container id="skills">
       {/*Maybe a cool enhancement might be to update skills to */}
       {/*have the layout as if it were a skill tree from a video*/}
       {/*game? Might be kind of cool?*/}

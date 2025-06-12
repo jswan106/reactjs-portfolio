@@ -4,11 +4,14 @@ interface NavItemProps {
   title: string;
   href: string;
   active?: boolean;
+  markScrolling?: (scrolling: boolean) => void;
+  onNavItemSelect?: (id: string) => void;
 }
 
 export function NavItem(props: NavItemProps) {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    props?.markScrolling?.(true);
     const id = props.href.replace("#", "");
     const el = document.getElementById(id);
     const scrollBox = document.getElementById("scroll-box");
@@ -23,8 +26,8 @@ export function NavItem(props: NavItemProps) {
         top: scrollTop - scrollOffset,
         behavior: "smooth",
       });
-      // Update the hash in the URL without jumping
       window.history.replaceState(null, "", props.href);
+      props.onNavItemSelect?.(id);
     } else {
       console.log("Couldn't find scrollbox and/or element", { el, scrollBox });
     }
