@@ -1,14 +1,32 @@
 import { Grid2 } from "@mui/material";
 import { NavItem } from "./NavItem.tsx";
 
-export function NavItemList() {
+interface NavItemListProps {
+  activeSection: string;
+}
+
+export function NavItemList({ activeSection }: NavItemListProps) {
   return (
-    <nav style={{ display: "block", width: "max-content" }}>
-      <Grid2 container direction="column">
-        <NavItem title="About" href="#about" active />
-        <NavItem title="Skills" href="#skills" />
-        <NavItem title="Achievements" href="#achievements" />
-      </Grid2>
-    </nav>
+    <Grid2 sx={{ position: "absolute", top: "35%" }}>
+      <nav>
+        <Grid2 container direction="column">
+          <NavItem
+            title="About"
+            href="#about"
+            active={activeSection === "about"}
+          />
+          <NavItem
+            title="Skills"
+            href="#skills"
+            active={activeSection === "skills"}
+          />
+          <NavItem
+            title="Achievements"
+            href="#achievements"
+            active={activeSection === "achievements"}
+          />
+        </Grid2>
+      </nav>
+    </Grid2>
   );
 }

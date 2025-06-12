@@ -7,11 +7,35 @@ interface NavItemProps {
 }
 
 export function NavItem(props: NavItemProps) {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const id = props.href.replace("#", "");
+    const el = document.getElementById(id);
+    const scrollBox = document.getElementById("scroll-box");
+    const scrollOffset = 30;
+
+    if (el && scrollBox) {
+      const boxRect = scrollBox.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      const scrollTop =
+        (scrollBox as HTMLElement).scrollTop + (elRect.top - boxRect.top);
+      (scrollBox as HTMLElement).scrollTo({
+        top: scrollTop - scrollOffset,
+        behavior: "smooth",
+      });
+      // Update the hash in the URL without jumping
+      window.history.replaceState(null, "", props.href);
+    } else {
+      console.log("Couldn't find scrollbox and/or element", { el, scrollBox });
+    }
+  };
+
   return (
     <Button
       color="inherit"
       disableTouchRipple
       disableFocusRipple
+      onClick={handleClick}
       sx={{
         px: 0,
         py: 0.2,
@@ -20,12 +44,14 @@ export function NavItem(props: NavItemProps) {
           borderColor: "inherit",
           boxShadow: "none",
         },
+        textTransform: "uppercase",
+        display: "flex",
+        alignItems: "center",
+        width: "100%",
       }}
     >
       <Typography
-        component="a"
         className="navItemGroup"
-        href={props.href}
         sx={{
           display: "flex",
           alignItems: "center",
@@ -33,7 +59,6 @@ export function NavItem(props: NavItemProps) {
           py: 1,
           lineHeight: "26px",
           width: "100%",
-          textTransform: "uppercase",
         }}
       >
         <Typography
